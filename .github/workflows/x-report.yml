@@ -3,7 +3,11 @@ name: X daily analytics report
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 10 * * *'
+    - cron: '30 23 * * *'
+    - cron: '30 3 * * *'
+    - cron: '30 5 * * *'
+    - cron: '30 8 * * *'
+    - cron: '35 11 * * *'
 
 permissions:
   contents: write
@@ -39,6 +43,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No analytics changes to commit."
           else
-            git commit -m "Add daily X analytics report"
+            git commit -m "Refresh X analytics report"
             git push
           fi
