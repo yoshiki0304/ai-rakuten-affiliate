@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Rakuten Collector</title>
+</head>
+<body>
+<script>
+(() => {
+  const ENDPOINT = 'https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701';
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  function normalize(item, keyword) {
+    const rawImage = item.mediumImageUrls?.[0]?.imageUrl || item.mediumImageUrls?.[0] || item.smallImageUrls?.[0]?.imageUrl || item.smallImageUrls?.[0] || '';
+    return {
+      keyword,
+      itemCode: item.itemCode || '',
+      itemName: item.itemName || '',
+      itemPrice: Number(item.itemPrice || 0),
+      itemCaption: item.itemCaption || '',
+      itemUrl: item.itemUrl || '',
+      affiliateUrl: item.affiliateUrl || item.itemUrl || '',
+      imageUrl: rawImage,
+      shopName: item.shopName || '',
+      shopCode: item.shopCode || '',
+      reviewAverage: Number(item.reviewAverage || 0),
+      reviewCount: Number(item.reviewCount || 0),
+      affiliateRate: Number(item.affiliateRate || 0),
+      availability: item.availability ?? 1,
+      taxFlag: item.taxFlag ?? null,
+      postageFlag: item.postageFlag ?? null,
+      creditCardFlag: item.creditCardFlag ?? null,
+      pointRate: Number(item.pointRate || 0)
+    };
+  }
+
+  async function fetchKeyword(config, keyword) {
+    const params = new URLSearchParams({
+      applicationId: config.applicationId,
+      accessKey: config.accessKey,
+      affiliateId: config.affiliateId || '',
+      keyword,
+      format: 'json',
+      formatVersion: '2',
+      hits: String(config.hits || 30),
+      sort: '-reviewCount',
+      imageFlag: '1'
+    });
+
+    const res = await fetch(ENDPOINT + '?' + params.toString(), {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-store'
+    });
+    const text = await res.text();
+    let data = {};
+    try { data = JSON.parse(text); } catch { data = { raw: text.slice(0, 500) }; }
+    if (!res.ok) {
+      throw new Error(`Rakuten API ${res.status}: ${data.error_description || data.error || data.raw || 'unknown error'}`);
+    }
+    const rows = data.Items || data.items || [];
+    return rows.map(x => normalize(x.Item || x.item || x, keyword));
+  }
+
+  window.collectRakuten = async function collectRakuten(config) {
+    const all = [];
+    const keywords = Array.isArray(config.keywords) ? config.keywords : [];
+    for (let i = 0; i < keywords.length; i++) {
+      if (i > 0) await sleep(1200);
+      const rows = await fetchKeyword(config, keywords[i]);
+      all.push(...rows);
+    }
+    return all;
+  };
+})();
+</script>
+</body>
+</html>
