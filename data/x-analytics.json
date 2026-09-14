@@ -1,3 +1,30 @@
 {
-  "entries": []
+  "entries": [
+    {
+      "reportDate": "2026-09-15",
+      "postDate": "2026-09-15",
+      "postId": "2099526534642217107",
+      "itemCode": "r1-shop:10000062",
+      "category": "防災",
+      "title": "防災士監修 非常用簡易トイレセット 60回分 防臭袋付き 携帯トイレ",
+      "price": 1280,
+      "text": "PR｜災害時や介護に役立つ防災士監修の非常用簡易トイレ60回分。防臭袋付きで長期保存に対応しています。レビュー7,200件以上で★4.5の高評価です。 楽天市場で詳細を見る↓\nhttps://t.co/aTCKW5d3cN",
+      "createdAt": "2026-09-14T15:51:47.000Z",
+      "metrics": {
+        "impressions": 2,
+        "likes": 0,
+        "reposts": 0,
+        "replies": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "urlClicks": 0,
+        "profileClicks": 0,
+        "engagements": 1
+      },
+      "rates": {
+        "ctr": 0,
+        "engagementRate": 50
+      }
+    }
+  ]
 }
