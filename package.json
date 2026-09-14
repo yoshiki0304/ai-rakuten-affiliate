@@ -1,0 +1,11 @@
+{
+  "name": "ai-rakuten-affiliate",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build-site": "node scripts/build.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "^24.16.0"
+  }
+}
