@@ -4,159 +4,40 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>楽天API 接続テスト</title>
-  <meta name="description" content="楽天市場APIの接続確認ページ">
   <style>
     :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#111;background:#f7f7f8}
     *{box-sizing:border-box}body{margin:0}.wrap{max-width:1080px;margin:0 auto;padding:32px 20px 56px}
-    h1{font-size:28px;margin:0 0 8px}.lead{margin:0 0 24px;color:#555}.panel{background:#fff;border:1px solid #e5e5e5;border-radius:16px;padding:20px;box-shadow:0 8px 24px rgba(0,0,0,.04)}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}input{width:100%;padding:12px 14px;border:1px solid #ccc;border-radius:10px;font-size:16px}
-    button{margin-top:16px;border:0;border-radius:10px;padding:13px 18px;font-size:16px;font-weight:700;background:#bf0000;color:#fff;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}.status{margin:14px 0 0;font-size:14px;white-space:pre-wrap}.ok{color:#087f23}.ng{color:#b00020}
-    .products{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px}.card{background:#fff;border:1px solid #e5e5e5;border-radius:14px;overflow:hidden}.card img{width:100%;aspect-ratio:1/1;object-fit:cover;background:#eee}.body{padding:12px}.name{font-weight:700;font-size:14px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.price{font-size:18px;font-weight:800;margin-top:8px}.meta{font-size:12px;color:#666;margin-top:6px}.buy{display:block;text-decoration:none;text-align:center;margin-top:10px;padding:10px;border-radius:9px;background:#bf0000;color:#fff;font-weight:700;font-size:14px}
+    h1{font-size:28px;margin:0 0 8px}.lead{margin:0 0 24px;color:#555}.panel{background:#fff;border:1px solid #e5e5e5;border-radius:16px;padding:20px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}input{width:100%;padding:12px 14px;border:1px solid #ccc;border-radius:10px;font-size:16px}
+    button{margin-top:16px;border:0;border-radius:10px;padding:13px 18px;font-size:16px;font-weight:700;background:#bf0000;color:#fff;cursor:pointer}button:disabled{opacity:.5}.status{margin:14px 0 0;font-size:14px;white-space:pre-wrap}.ok{color:#087f23}.ng{color:#b00020}
+    .products{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px}.card{background:#fff;border:1px solid #e5e5e5;border-radius:14px;overflow:hidden}.card img{width:100%;aspect-ratio:1/1;object-fit:cover}.body{padding:12px}.name{font-weight:700;font-size:14px;line-height:1.45}.price{font-size:18px;font-weight:800;margin-top:8px}.meta{font-size:12px;color:#666;margin-top:6px}.buy{display:block;text-decoration:none;text-align:center;margin-top:10px;padding:10px;border-radius:9px;background:#bf0000;color:#fff;font-weight:700;font-size:14px}
     .note{font-size:12px;color:#666;margin-top:14px;line-height:1.6}footer{margin-top:34px;font-size:12px;color:#666;text-align:center}
-    @media(max-width:800px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.products{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}.products{grid-template-columns:repeat(2,1fr)}}
   </style>
 </head>
 <body>
 <main class="wrap">
   <h1>楽天市場API 接続テスト</h1>
   <p class="lead">GitHub Pages から楽天市場APIへ接続できるか確認します。入力したキーはこのページ内でのみ使用し、GitHubには保存しません。</p>
-
   <section class="panel">
     <div class="grid">
-      <div>
-        <label for="appId">Application ID</label>
-        <input id="appId" autocomplete="off" placeholder="Application ID">
-      </div>
-      <div>
-        <label for="accessKey">Access Key</label>
-        <input id="accessKey" type="password" autocomplete="off" placeholder="Access Key">
-      </div>
-      <div>
-        <label for="affiliateId">Affiliate ID</label>
-        <input id="affiliateId" autocomplete="off" placeholder="Affiliate ID">
-      </div>
-      <div>
-        <label for="keyword">検索キーワード</label>
-        <input id="keyword" value="一人暮らし 便利グッズ">
-      </div>
+      <div><label>Application ID</label><input id="appId" autocomplete="off"></div>
+      <div><label>Access Key</label><input id="accessKey" type="password" autocomplete="off"></div>
+      <div><label>Affiliate ID</label><input id="affiliateId" autocomplete="off"></div>
+      <div><label>検索キーワード</label><input id="keyword" value="一人暮らし 便利グッズ"></div>
     </div>
     <button id="run">楽天APIへ接続</button>
     <div id="status" class="status"></div>
-    <p class="note">Access Key はソースコードやGitHub Secretsにはまだ保存しません。まずブラウザ経由の接続可否だけを確認します。</p>
+    <p class="note">接続エラー時は、HTTPステータスや楽天APIのエラー内容をここに表示します。</p>
   </section>
-
   <section id="products" class="products"></section>
-
   <footer>Supported by Rakuten Web Service</footer>
 </main>
-
 <script>
-(() => {
-  const run = document.getElementById('run');
-  const status = document.getElementById('status');
-  const products = document.getElementById('products');
-
-  const setStatus = (text, ok = false) => {
-    status.textContent = text;
-    status.className = 'status ' + (ok ? 'ok' : 'ng');
-  };
-
-  function extractItems(data) {
-    const raw = data.Items || data.items || [];
-    return raw.map(x => x.Item || x.item || x).filter(Boolean);
-  }
-
-  function render(items) {
-    products.innerHTML = '';
-    items.slice(0, 8).forEach(item => {
-      const image = item.mediumImageUrls?.[0]?.imageUrl || item.mediumImageUrls?.[0] || item.smallImageUrls?.[0]?.imageUrl || '';
-      const url = item.affiliateUrl || item.itemUrl || '#';
-      const price = Number(item.itemPrice || 0).toLocaleString('ja-JP');
-      const review = item.reviewAverage ? `★ ${item.reviewAverage} / ${item.reviewCount || 0}件` : 'レビュー情報なし';
-      const card = document.createElement('article');
-      card.className = 'card';
-      card.innerHTML = `
-        ${image ? `<img src="${image}" alt="">` : ''}
-        <div class="body">
-          <div class="name"></div>
-          <div class="price">¥${price}</div>
-          <div class="meta">${review}</div>
-          <a class="buy" href="${url}" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a>
-        </div>`;
-      card.querySelector('.name').textContent = item.itemName || '商品名なし';
-      products.appendChild(card);
-    });
-  }
-
-  run.addEventListener('click', () => {
-    const applicationId = document.getElementById('appId').value.trim();
-    const accessKey = document.getElementById('accessKey').value.trim();
-    const affiliateId = document.getElementById('affiliateId').value.trim();
-    const keyword = document.getElementById('keyword').value.trim();
-
-    if (!applicationId || !accessKey || !keyword) {
-      setStatus('Application ID、Access Key、検索キーワードを入力してください。');
-      return;
-    }
-
-    run.disabled = true;
-    products.innerHTML = '';
-    status.className = 'status';
-    status.textContent = '接続中…';
-
-    const callbackName = '__rakuten_' + Date.now();
-    const params = new URLSearchParams({
-      applicationId,
-      accessKey,
-      keyword,
-      format: 'json',
-      formatVersion: '2',
-      hits: '8',
-      sort: '-reviewCount',
-      imageFlag: '1',
-      callback: callbackName
-    });
-    if (affiliateId) params.set('affiliateId', affiliateId);
-
-    const script = document.createElement('script');
-    let finished = false;
-    const cleanup = () => {
-      if (finished) return;
-      finished = true;
-      run.disabled = false;
-      delete window[callbackName];
-      script.remove();
-    };
-
-    const timer = setTimeout(() => {
-      cleanup();
-      setStatus('タイムアウトしました。Allowed websites、Application ID、Access Keyを確認してください。');
-    }, 15000);
-
-    window[callbackName] = data => {
-      clearTimeout(timer);
-      const items = extractItems(data);
-      if (!items.length) {
-        cleanup();
-        const detail = data?.error_description || data?.error || JSON.stringify(data).slice(0, 300);
-        setStatus('APIから商品を取得できませんでした。\n' + detail);
-        return;
-      }
-      render(items);
-      cleanup();
-      setStatus(`接続成功：${items.length}件取得しました。`, true);
-    };
-
-    script.onerror = () => {
-      clearTimeout(timer);
-      cleanup();
-      setStatus('APIリクエストに失敗しました。楽天側のAllowed websites設定やキーを確認してください。');
-    };
-
-    script.src = 'https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701?' + params.toString();
-    document.body.appendChild(script);
-  });
-})();
+const run=document.getElementById('run'),statusEl=document.getElementById('status'),products=document.getElementById('products');
+function status(t,ok=false){statusEl.textContent=t;statusEl.className='status '+(ok?'ok':'ng')}
+function render(items){products.innerHTML='';items.slice(0,8).forEach(item=>{const image=item.mediumImageUrls?.[0]?.imageUrl||item.mediumImageUrls?.[0]||'';const url=item.affiliateUrl||item.itemUrl||'#';const card=document.createElement('article');card.className='card';card.innerHTML=`${image?`<img src="${image}" alt="">`:''}<div class="body"><div class="name"></div><div class="price">¥${Number(item.itemPrice||0).toLocaleString('ja-JP')}</div><div class="meta">${item.reviewAverage?`★ ${item.reviewAverage} / ${item.reviewCount||0}件`:'レビュー情報なし'}</div><a class="buy" href="${url}" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a></div>`;card.querySelector('.name').textContent=item.itemName||'商品名なし';products.appendChild(card)})}
+run.addEventListener('click',async()=>{const applicationId=document.getElementById('appId').value.trim(),accessKey=document.getElementById('accessKey').value.trim(),affiliateId=document.getElementById('affiliateId').value.trim(),keyword=document.getElementById('keyword').value.trim();if(!applicationId||!accessKey||!keyword){status('Application ID、Access Key、検索キーワードを入力してください。');return}run.disabled=true;products.innerHTML='';statusEl.className='status';statusEl.textContent='接続中…';const p=new URLSearchParams({applicationId,accessKey,keyword,format:'json',formatVersion:'2',hits:'8',sort:'-reviewCount',imageFlag:'1'});if(affiliateId)p.set('affiliateId',affiliateId);const url='https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701?'+p.toString();try{const r=await fetch(url,{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',referrer:location.href,referrerPolicy:'strict-origin-when-cross-origin'});const text=await r.text();let data;try{data=JSON.parse(text)}catch{data=null}if(!r.ok){status(`HTTP ${r.status}\n${data?.error||''}\n${data?.error_description||text.slice(0,500)}`);return}const items=data?.Items||data?.items||[];const normalized=items.map(x=>x.Item||x.item||x).filter(Boolean);if(!normalized.length){status('HTTP 200 ですが商品が0件でした。\n'+text.slice(0,500));return}render(normalized);status(`接続成功：${normalized.length}件取得しました。`,true)}catch(e){status('ブラウザ通信エラー\n'+e.message+'\n\nAllowed websites が yoshiki0304.github.io になっているか確認してください。')}finally{run.disabled=false}});
 </script>
 </body>
 </html>
