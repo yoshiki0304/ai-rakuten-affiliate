@@ -1,6 +1,8 @@
 name: X affiliate post
 
 on:
+  schedule:
+    - cron: '30 11 * * *'
   workflow_dispatch:
     inputs:
       force_post:
