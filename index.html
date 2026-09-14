@@ -1,43 +1,260 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>楽天API 接続テスト</title>
-  <style>
-    :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#111;background:#f7f7f8}
-    *{box-sizing:border-box}body{margin:0}.wrap{max-width:1080px;margin:0 auto;padding:32px 20px 56px}
-    h1{font-size:28px;margin:0 0 8px}.lead{margin:0 0 24px;color:#555}.panel{background:#fff;border:1px solid #e5e5e5;border-radius:16px;padding:20px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}input{width:100%;padding:12px 14px;border:1px solid #ccc;border-radius:10px;font-size:16px}
-    button{margin-top:16px;border:0;border-radius:10px;padding:13px 18px;font-size:16px;font-weight:700;background:#bf0000;color:#fff;cursor:pointer}button:disabled{opacity:.5}.status{margin:14px 0 0;font-size:14px;white-space:pre-wrap}.ok{color:#087f23}.ng{color:#b00020}
-    .products{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px}.card{background:#fff;border:1px solid #e5e5e5;border-radius:14px;overflow:hidden}.card img{width:100%;aspect-ratio:1/1;object-fit:cover}.body{padding:12px}.name{font-weight:700;font-size:14px;line-height:1.45}.price{font-size:18px;font-weight:800;margin-top:8px}.meta{font-size:12px;color:#666;margin-top:6px}.buy{display:block;text-decoration:none;text-align:center;margin-top:10px;padding:10px;border-radius:9px;background:#bf0000;color:#fff;font-weight:700;font-size:14px}
-    .note{font-size:12px;color:#666;margin-top:14px;line-height:1.6}footer{margin-top:34px;font-size:12px;color:#666;text-align:center}
-    @media(max-width:800px){.grid{grid-template-columns:1fr}.products{grid-template-columns:repeat(2,1fr)}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>暮らしセレクト｜一人暮らしの便利グッズを自動比較</title>
+<meta name="description" content="楽天市場の商品データをもとに、一人暮らしに役立つ便利グッズをレビュー・評価などから自動比較して紹介します。">
+<style>
+:root{--ink:#151515;--sub:#666;--line:#e9e7e2;--paper:#f7f5f1;--white:#fff;--accent:#b6251e;--max:1180px;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:var(--paper)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0}a{color:inherit}.wrap{max-width:var(--max);margin:auto;padding:0 24px}.top{background:#171717;color:#fff;font-size:12px;text-align:center;padding:8px}.nav{height:74px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(247,245,241,.92);position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}.brand{font-weight:900;font-size:21px;letter-spacing:.04em;text-decoration:none}.navlinks{display:flex;gap:18px;font-size:13px;color:#555}.navlinks a{text-decoration:none}.hero{padding:80px 0 68px;border-bottom:1px solid var(--line)}.hero-inner{display:grid;grid-template-columns:1.25fr .75fr;gap:64px;align-items:end}.kicker,.eyebrow{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--accent)}h1{font-size:clamp(38px,6vw,76px);line-height:1.02;letter-spacing:-.045em;margin:15px 0 20px}.hero p{font-size:17px;line-height:1.9;color:#555;max-width:680px}.hero-note{border-left:1px solid #bbb;padding-left:24px;font-size:13px;line-height:1.8;color:#666}.section{padding:72px 0;border-bottom:1px solid var(--line)}.section-head{display:flex;justify-content:space-between;gap:28px;align-items:end;margin-bottom:28px}.section-head h2{font-size:34px;margin:7px 0 0;letter-spacing:-.02em}.section-head p{font-size:13px;color:var(--sub);max-width:370px;line-height:1.7}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{background:var(--white);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}.image{display:block;aspect-ratio:1/1;background:#fff;overflow:hidden}.image img{width:100%;height:100%;object-fit:contain;transition:transform .25s ease}.image:hover img{transform:scale(1.025)}.card-body{padding:16px;display:flex;flex-direction:column;flex:1}.tag{font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.08em}.card h3{font-size:15px;line-height:1.55;margin:9px 0 10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.summary{font-size:13px;line-height:1.65;color:#555;margin:0 0 14px}.rating{font-size:12px;color:#666;margin-top:auto}.price{font-size:22px;font-weight:900;margin:7px 0 12px}.price span{display:block;font-size:9px;font-weight:400;color:#888;margin-top:2px}.cta{display:block;text-align:center;text-decoration:none;background:#b6251e;color:#fff;padding:12px 10px;border-radius:9px;font-size:13px;font-weight:800}.about{padding:56px 0}.about-box{background:#1c1c1c;color:#fff;border-radius:20px;padding:32px}.about-box h2{margin-top:0}.about-box p{color:#ccc;line-height:1.8;font-size:13px}.footer{border-top:1px solid var(--line);padding:30px 0 48px;font-size:11px;color:#777;line-height:1.8}.footer a{color:#555}@media(max-width:900px){.hero-inner{grid-template-columns:1fr}.hero-note{display:none}.grid{grid-template-columns:repeat(2,1fr)}.section-head{display:block}.navlinks{display:none}}@media(max-width:520px){.wrap{padding:0 16px}.hero{padding:52px 0}.grid{grid-template-columns:1fr 1fr;gap:10px}.card-body{padding:12px}.card h3{font-size:13px}.summary{font-size:12px}.price{font-size:18px}.section{padding:48px 0}.section-head h2{font-size:27px}}
+</style>
 </head>
 <body>
-<main class="wrap">
-  <h1>楽天市場API 接続テスト</h1>
-  <p class="lead">GitHub Pages から楽天市場APIへ接続できるか確認します。入力したキーはこのページ内でのみ使用し、GitHubには保存しません。</p>
-  <section class="panel">
-    <div class="grid">
-      <div><label>Application ID</label><input id="appId" autocomplete="off"></div>
-      <div><label>Access Key</label><input id="accessKey" type="password" autocomplete="off"></div>
-      <div><label>Affiliate ID</label><input id="affiliateId" autocomplete="off"></div>
-      <div><label>検索キーワード</label><input id="keyword" value="一人暮らし 便利グッズ"></div>
+<div class="top">当サイトは楽天アフィリエイトプログラムを利用しています</div>
+<header class="nav"><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><a class="brand" href="#">暮らしセレクト</a><nav class="navlinks"><a href="#%E6%9A%AE%E3%82%89%E3%81%97">暮らし</a><a href="#%E3%82%AD%E3%83%83%E3%83%81%E3%83%B3">キッチン</a><a href="#%E5%8F%8E%E7%B4%8D">収納</a><a href="#%E6%8E%83%E9%99%A4">掃除</a><a href="#%E3%83%87%E3%82%B9%E3%82%AF">デスク</a><a href="#%E9%98%B2%E7%81%BD">防災</a></nav></div></header>
+<main>
+<section class="hero"><div class="wrap hero-inner"><div><span class="kicker">SMART LIVING PICKS</span><h1>暮らしを軽くする、<br>ちょうどいい道具。</h1><p>楽天市場の公開商品データから、レビュー評価・レビュー数などをもとに候補を自動選定。AIが商品データを整理して、一人暮らしに取り入れやすいアイテムを紹介します。</p></div><div class="hero-note">最終更新：2026/09/14 22:53<br>商品価格・在庫・ポイント等は変動します。購入前に楽天市場の商品ページで最新情報をご確認ください。</div></div></section>
+<div class="wrap"><section class="section" id="%E6%9A%AE%E3%82%89%E3%81%97"><div class="section-head"><div><span class="eyebrow">CURATED PICKS</span><h2>暮らしのおすすめ</h2></div><p>レビュー数や評価などの公開データをもとに自動選定しています。</p></div><div class="grid"><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsfsetm03%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000112%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/starfilter/cabinet/item/main/imgrc0133123250.jpg?_ex=128x128" alt="【楽天総合1位】 スターフィルター 換気扇フィルター レンジフードフィルター レンジフィルターカバー スターターセット 強力マグネット+交換フィルター3枚 シロッコファン 不燃性ガラス 繊維タイプ 新居 新築 一人暮らし 節約 便利グッズ 新生活 引っ越し" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">暮らし</span>
+      <h3>【楽天総合1位】 スターフィルター 換気扇フィルター レンジフードフィルター レンジフィルターカバー スターターセット 強力マグネット+交換フィルター3枚 シロッコファン 不燃性ガラス 繊維タイプ 新居 新築 一人暮らし 節約 便利グッズ 新生活 引っ越し</h3>
+      <p class="summary">レビュー評価4.6、4,316件のレビューを参考に選んだ、暮らし向けの注目アイテムです。</p>
+      <div class="rating">★ 4.56 / 4,316件</div>
+      <div class="price">¥3,080<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsfsetm03%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000112%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
     </div>
-    <button id="run">楽天APIへ接続</button>
-    <div id="status" class="status"></div>
-    <p class="note">接続エラー時は、HTTPステータスや楽天APIのエラー内容をここに表示します。</p>
-  </section>
-  <section id="products" class="products"></section>
-  <footer>Supported by Rakuten Web Service</footer>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsfset1%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000018%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/starfilter/cabinet/item/main/imgrc0133123246.jpg?_ex=128x128" alt="【楽天総合1位】 スターフィルター 換気扇フィルター レンジフードフィルター レンジフィルターカバー スターターセット 枠1枚+フィルター2枚 シロッコファン 不燃性ガラス 繊維タイプ 新居 新築 一人暮らし 節約 便利グッズ 新生活 引っ越し" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">暮らし</span>
+      <h3>【楽天総合1位】 スターフィルター 換気扇フィルター レンジフードフィルター レンジフィルターカバー スターターセット 枠1枚+フィルター2枚 シロッコファン 不燃性ガラス 繊維タイプ 新居 新築 一人暮らし 節約 便利グッズ 新生活 引っ越し</h3>
+      <p class="summary">レビュー評価4.6、1,902件のレビューを参考に選んだ、暮らし向けの注目アイテムです。</p>
+      <div class="rating">★ 4.63 / 1,902件</div>
+      <div class="price">¥3,960<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsfset1%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000018%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsfset2%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000019%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/starfilter/cabinet/item/main/imgrc0133123247.jpg?_ex=128x128" alt="【楽天総合1位】 スターフィルター 換気扇フィルター レンジフードフィルター レンジフィルターカバー スターターセット 枠2枚+フィルター4枚 シロッコファン 不燃性ガラス 繊維タイプ 新居 新築 一人暮らし 節約 便利グッズ 新生活 引っ越" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">暮らし</span>
+      <h3>【楽天総合1位】 スターフィルター 換気扇フィルター レンジフードフィルター レンジフィルターカバー スターターセット 枠2枚+フィルター4枚 シロッコファン 不燃性ガラス 繊維タイプ 新居 新築 一人暮らし 節約 便利グッズ 新生活 引っ越</h3>
+      <p class="summary">レビュー評価4.6、1,626件のレビューを参考に選んだ、暮らし向けの注目アイテムです。</p>
+      <div class="rating">★ 4.60 / 1,626件</div>
+      <div class="price">¥5,940<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsfset2%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000019%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsf02-06%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000026%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/starfilter/cabinet/item/main/imgrc0133123258.jpg?_ex=128x128" alt="【楽天総合1位】 スターフィルター 換気扇フィルター レンジフードフィルター レンジフィルターカバー 6枚(6枚×1袋)[SF02中サイズ] シロッコファン 不燃性ガラス 繊維タイプ ヒルナンデス!で紹介 新居 新築 一人暮らし 節約 便利グッズ 新生活 引っ越し" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">暮らし</span>
+      <h3>【楽天総合1位】 スターフィルター 換気扇フィルター レンジフードフィルター レンジフィルターカバー 6枚(6枚×1袋)[SF02中サイズ] シロッコファン 不燃性ガラス 繊維タイプ ヒルナンデス!で紹介 新居 新築 一人暮らし 節約 便利グッズ 新生活 引っ越し</h3>
+      <p class="summary">レビュー評価4.7、656件のレビューを参考に選んだ、暮らし向けの注目アイテムです。</p>
+      <div class="rating">★ 4.72 / 656件</div>
+      <div class="price">¥3,260<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsf02-06%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000026%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article></div></section><section class="section" id="%E3%82%AD%E3%83%83%E3%83%81%E3%83%B3"><div class="section-head"><div><span class="eyebrow">CURATED PICKS</span><h2>キッチンのおすすめ</h2></div><p>レビュー数や評価などの公開データをもとに自動選定しています。</p></div><div class="grid"><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsf01-06%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000022%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/starfilter/cabinet/item/main/imgrc0133123258.jpg?_ex=128x128" alt="【楽天総合1位】スターフィルター レンジフードフィルター 6枚(6枚×1袋)[SF01小サイズ] キッチン ガラス繊維タイプ 換気扇 フィルター レンジフィルター 換気扇 カバー レンジフードカバー 換気扇の掃除 油汚れ 新居 新築 一人暮らし節約 便利グッズ 新生活 引っ越し" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">キッチン</span>
+      <h3>【楽天総合1位】スターフィルター レンジフードフィルター 6枚(6枚×1袋)[SF01小サイズ] キッチン ガラス繊維タイプ 換気扇 フィルター レンジフィルター 換気扇 カバー レンジフードカバー 換気扇の掃除 油汚れ 新居 新築 一人暮らし節約 便利グッズ 新生活 引っ越し</h3>
+      <p class="summary">レビュー評価4.8、85件のレビューを参考に選んだ、キッチン向けの注目アイテムです。</p>
+      <div class="rating">★ 4.78 / 85件</div>
+      <div class="price">¥2,880<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsf01-06%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000022%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00sc9no.abj4c006.g00sc9no.abj4d708/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ff212059-seki%2F10000296%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Ff212059-seki%2Fi%2F10000296%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/f212059-seki/cabinet/10117935/10436502/10000296_s1_760_760.jpg?_ex=128x128" alt="【ふるさと納税】サンクラフト キャベツ スライサー （安全ホルダー付き）BS-271 日本製 国産 セット キャベツ 玉ねぎ カブ じゃがいも 1mm 千切り 千切り器 ステンレス刃 ふわふわ よく切れる 大きい キッチン用品 時短調理 便利グッズ 新生活 一人暮らし H7-129" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">キッチン</span>
+      <h3>【ふるさと納税】サンクラフト キャベツ スライサー （安全ホルダー付き）BS-271 日本製 国産 セット キャベツ 玉ねぎ カブ じゃがいも 1mm 千切り 千切り器 ステンレス刃 ふわふわ よく切れる 大きい キッチン用品 時短調理 便利グッズ 新生活 一人暮らし H7-129</h3>
+      <p class="summary">レビュー評価4.6、58件のレビューを参考に選んだ、キッチン向けの注目アイテムです。</p>
+      <div class="rating">★ 4.64 / 58件</div>
+      <div class="price">¥10,000<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00sc9no.abj4c006.g00sc9no.abj4d708/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ff212059-seki%2F10000296%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Ff212059-seki%2Fi%2F10000296%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00qsiuo.abj4c434.g00qsiuo.abj4d020/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fe-prism%2Fdltn0272%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fe-prism%2Fi%2F10118331%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/e-prism/cabinet/item_dltn_4/dltn0272.jpg?_ex=128x128" alt="DULTON ダルトン セラミックレードルスタンド シングル お玉置き おたま置き お玉スタンド おたまスタンド お玉立て おたま立て トングスタンド レードルスタンド おしゃれ お洒落 スタイリッシュ シンプル レトロ アンティーク モダン 立てる 立て掛ける 便利" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">キッチン</span>
+      <h3>DULTON ダルトン セラミックレードルスタンド シングル お玉置き おたま置き お玉スタンド おたまスタンド お玉立て おたま立て トングスタンド レードルスタンド おしゃれ お洒落 スタイリッシュ シンプル レトロ アンティーク モダン 立てる 立て掛ける 便利</h3>
+      <p class="summary">レビュー評価4.7、33件のレビューを参考に選んだ、キッチン向けの注目アイテムです。</p>
+      <div class="rating">★ 4.73 / 33件</div>
+      <div class="price">¥990<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00qsiuo.abj4c434.g00qsiuo.abj4d020/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fe-prism%2Fdltn0272%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fe-prism%2Fi%2F10118331%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsf01-36%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000025%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/starfilter/cabinet/item/main/imgrc0133123263.jpg?_ex=128x128" alt="【楽天総合1位】スターフィルター レンジフードフィルター 36枚(6枚×6袋)[SF01小サイズ] キッチン ガラス繊維タイプ 換気扇 フィルター レンジフィルター 換気扇 カバー レンジフードカバー 油汚れ 送料無料 新居 新築 一人暮らし 節約 便利グッズ 新生活 引っ越し" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">キッチン</span>
+      <h3>【楽天総合1位】スターフィルター レンジフードフィルター 36枚(6枚×6袋)[SF01小サイズ] キッチン ガラス繊維タイプ 換気扇 フィルター レンジフィルター 換気扇 カバー レンジフードカバー 油汚れ 送料無料 新居 新築 一人暮らし 節約 便利グッズ 新生活 引っ越し</h3>
+      <p class="summary">レビュー評価4.8、26件のレビューを参考に選んだ、キッチン向けの注目アイテムです。</p>
+      <div class="rating">★ 4.81 / 26件</div>
+      <div class="price">¥15,200<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00s1l0o.abj4ca19.g00s1l0o.abj4dee5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstarfilter%2Fsf01-36%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fstarfilter%2Fi%2F10000025%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article></div></section><section class="section" id="%E5%8F%8E%E7%B4%8D"><div class="section-head"><div><span class="eyebrow">CURATED PICKS</span><h2>収納のおすすめ</h2></div><p>レビュー数や評価などの公開データをもとに自動選定しています。</p></div><div class="grid"><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00ritdo.abj4cc71.g00ritdo.abj4dbb4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsugupochi%2F1778%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fsugupochi%2Fi%2F10025750%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/sugupochi/cabinet/ir5/1778_01_s_a.jpg?_ex=128x128" alt="【mitas公式】折りたたみ リュック エコバッグ リュックサック コンパクト 大容量 20L 収納 撥水加工 便利グッズ サブバッグ トラベル 旅行 アウトドア おしゃれ 買い物 学生 一人暮らし 男女兼用 メンズ レディース 子供 シンプル ハイキング" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">収納</span>
+      <h3>【mitas公式】折りたたみ リュック エコバッグ リュックサック コンパクト 大容量 20L 収納 撥水加工 便利グッズ サブバッグ トラベル 旅行 アウトドア おしゃれ 買い物 学生 一人暮らし 男女兼用 メンズ レディース 子供 シンプル ハイキング</h3>
+      <p class="summary">レビュー評価4.5、72件のレビューを参考に選んだ、収納向けの注目アイテムです。</p>
+      <div class="rating">★ 4.47 / 72件</div>
+      <div class="price">¥1,780<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00ritdo.abj4cc71.g00ritdo.abj4dbb4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsugupochi%2F1778%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fsugupochi%2Fi%2F10025750%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00tpvlo.abj4cfad.g00tpvlo.abj4dd66/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fownlife%2Ftw000333%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fownlife%2Fi%2F10000845%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/ownlife/cabinet/07914590/09549691/tw000333.jpg?_ex=128x128" alt="＼当日発送／【楽天1位】 圧縮収納袋 3サイズ 圧縮 スペース 40％ 節約 収納袋 布団 持ち手付き 布団収納袋 洗える 引越し 押入れ収納 軽量 使いやすい おしゃれ 折りたたみ シンプル 押入れ クローゼット 羽毛布団 掃除機不要 新生活 便利グッズ 一人暮らし 衣替え 冬物" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">収納</span>
+      <h3>＼当日発送／【楽天1位】 圧縮収納袋 3サイズ 圧縮 スペース 40％ 節約 収納袋 布団 持ち手付き 布団収納袋 洗える 引越し 押入れ収納 軽量 使いやすい おしゃれ 折りたたみ シンプル 押入れ クローゼット 羽毛布団 掃除機不要 新生活 便利グッズ 一人暮らし 衣替え 冬物</h3>
+      <p class="summary">レビュー評価4.7、46件のレビューを参考に選んだ、収納向けの注目アイテムです。</p>
+      <div class="rating">★ 4.67 / 46件</div>
+      <div class="price">¥1,880<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00tpvlo.abj4cfad.g00tpvlo.abj4dd66/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fownlife%2Ftw000333%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fownlife%2Fi%2F10000845%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00qkgto.abj4c749.g00qkgto.abj4d334/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Farimas%2F253130%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Farimas%2Fi%2F10017837%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/arimas/cabinet/11094298/13173273/13549438/imgrc0131671835.jpg?_ex=128x128" alt="すのこ プラスチック 押入れ スノコ 2枚組み【選べるセット数】アイリスオーヤマ 家具 収納 衣替え 通気性 湿気 すのこマット スノコマット マット おしゃれ インテリア シンプル 整理棚 湿気対策 グッズ 梅雨 新生活 幅40 奥行80 SN-40[2509SE][2609SE]" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">収納</span>
+      <h3>すのこ プラスチック 押入れ スノコ 2枚組み【選べるセット数】アイリスオーヤマ 家具 収納 衣替え 通気性 湿気 すのこマット スノコマット マット おしゃれ インテリア シンプル 整理棚 湿気対策 グッズ 梅雨 新生活 幅40 奥行80 SN-40[2509SE][2609SE]</h3>
+      <p class="summary">レビュー評価4.5、52件のレビューを参考に選んだ、収納向けの注目アイテムです。</p>
+      <div class="rating">★ 4.52 / 52件</div>
+      <div class="price">¥2,420<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00qkgto.abj4c749.g00qkgto.abj4d334/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Farimas%2F253130%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Farimas%2Fi%2F10017837%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00u9ryo.abj4c6f4.g00u9ryo.abj4d073/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fcomodocasa%2F287-lbk-10%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fcomodocasa%2Fi%2F10005017%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/comodocasa/cabinet/every_makers/chuuburepu/imgrc0083421688.jpg?_ex=128x128" alt="【選べる特典付a】 日本製 ライクイット like-it LBK-10 米とぎにも使えるザルとボウル 6点セット 正規品 食洗機対応 電子レンジ対応 スタッキング 米研ぎ 米とぎ 米 rice お米 こめ 水切り 省スペース 収納 深型 浅型 プレート 耐熱 ザル" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">収納</span>
+      <h3>【選べる特典付a】 日本製 ライクイット like-it LBK-10 米とぎにも使えるザルとボウル 6点セット 正規品 食洗機対応 電子レンジ対応 スタッキング 米研ぎ 米とぎ 米 rice お米 こめ 水切り 省スペース 収納 深型 浅型 プレート 耐熱 ザル</h3>
+      <p class="summary">レビュー評価4.8、19件のレビューを参考に選んだ、収納向けの注目アイテムです。</p>
+      <div class="rating">★ 4.84 / 19件</div>
+      <div class="price">¥4,730<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00u9ryo.abj4c6f4.g00u9ryo.abj4d073/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fcomodocasa%2F287-lbk-10%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fcomodocasa%2Fi%2F10005017%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article></div></section><section class="section" id="%E6%8E%83%E9%99%A4"><div class="section-head"><div><span class="eyebrow">CURATED PICKS</span><h2>掃除のおすすめ</h2></div><p>レビュー数や評価などの公開データをもとに自動選定しています。</p></div><div class="grid"><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00tz2jo.abj4c740.g00tz2jo.abj4d57e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Foutgreenlife%2Fog000472%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Foutgreenlife%2Fi%2F10000735%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/outgreenlife/cabinet/08228296/09549699/og000472.jpg?_ex=128x128" alt="＼当日発送／【楽天1位】 布団圧縮袋 2サイズ 圧縮 スペース 40％ 節約 撥水 収納袋 布団 持ち手付き 布団収納袋 洗える 引越し 押入れ収納 軽量 使いやすい おしゃれ 羽毛布団 耐久力 掃除機不要 新生活 便利グッズ 一人暮らし 衣替え 折りたたみ シンプル 押入れ" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">掃除</span>
+      <h3>＼当日発送／【楽天1位】 布団圧縮袋 2サイズ 圧縮 スペース 40％ 節約 撥水 収納袋 布団 持ち手付き 布団収納袋 洗える 引越し 押入れ収納 軽量 使いやすい おしゃれ 羽毛布団 耐久力 掃除機不要 新生活 便利グッズ 一人暮らし 衣替え 折りたたみ シンプル 押入れ</h3>
+      <p class="summary">レビュー評価4.8、12件のレビューを参考に選んだ、掃除向けの注目アイテムです。</p>
+      <div class="rating">★ 4.83 / 12件</div>
+      <div class="price">¥1,880<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00tz2jo.abj4c740.g00tz2jo.abj4d57e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Foutgreenlife%2Fog000472%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Foutgreenlife%2Fi%2F10000735%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00tpvlo.abj4cfad.g00tpvlo.abj4dd66/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fownlife%2Ftw000459%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fownlife%2Fi%2F10000988%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/ownlife/cabinet/07914590/09549691/tw000459.jpg?_ex=128x128" alt="＼当日発送／【楽天1位】 圧縮収納袋 2サイズ 圧縮 スペース 40％ 節約 布団収納 圧縮袋 収納袋 衣類収納 持ち手付き バイカラー シンプル かわいい おしゃれ 引っ越し シーズンオフ 衣替え クローゼット 押入れ収納 軽量 使いやすい 簡単 一人暮らし 新生活 便利グッズ 撥水" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">掃除</span>
+      <h3>＼当日発送／【楽天1位】 圧縮収納袋 2サイズ 圧縮 スペース 40％ 節約 布団収納 圧縮袋 収納袋 衣類収納 持ち手付き バイカラー シンプル かわいい おしゃれ 引っ越し シーズンオフ 衣替え クローゼット 押入れ収納 軽量 使いやすい 簡単 一人暮らし 新生活 便利グッズ 撥水</h3>
+      <p class="summary">レビュー評価5.0、4件のレビューを参考に選んだ、掃除向けの注目アイテムです。</p>
+      <div class="rating">★ 5.00 / 4件</div>
+      <div class="price">¥1,780<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00tpvlo.abj4cfad.g00tpvlo.abj4dd66/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fownlife%2Ftw000459%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fownlife%2Fi%2F10000988%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00smrpo.abj4c925.g00smrpo.abj4d6bf/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsun-road1%2Fh110%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fsun-road1%2Fi%2F10000298%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/sun-road1/cabinet/shohin1/05402628/imgrc0116289093.jpg?_ex=128x128" alt="フローリングワイパー 替え モップ 床 掃除 雑巾かけ ぞうきん ゾウキン カラ拭き 水拭き【よくおちぞうきん 3色組】ふきモップ マイクロファイバー 女性が考えた 便利 グッズ 暮らし アイデア 掃除道具 フローリング ワイパー クロス 交換用 スペア 日本製 送料無料" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">掃除</span>
+      <h3>フローリングワイパー 替え モップ 床 掃除 雑巾かけ ぞうきん ゾウキン カラ拭き 水拭き【よくおちぞうきん 3色組】ふきモップ マイクロファイバー 女性が考えた 便利 グッズ 暮らし アイデア 掃除道具 フローリング ワイパー クロス 交換用 スペア 日本製 送料無料</h3>
+      <p class="summary">レビュー評価4.6、11件のレビューを参考に選んだ、掃除向けの注目アイテムです。</p>
+      <div class="rating">★ 4.64 / 11件</div>
+      <div class="price">¥1,777<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00smrpo.abj4c925.g00smrpo.abj4d6bf/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsun-road1%2Fh110%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fsun-road1%2Fi%2F10000298%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00t4meo.abj4c996.g00t4meo.abj4d1e5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fmilink-inc%2Fr02qt0035%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fmilink-inc%2Fi%2F10000330%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/milink-inc/cabinet/sn/ks02_sn.jpg?_ex=128x128" alt="加湿器 超音波式 コードレス 床置き 卓上 小型 コンパクト 大容量 8時間 タイマー付き 水を入れるだけ 洗える 掃除 静音 机 デスク 部屋 リビング 寝室 子供部屋 一人暮らし インテリア ライト 光 USB 充電式 電気不要 携帯 持ち運び 旅行 おしゃれ かわいい" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">掃除</span>
+      <h3>加湿器 超音波式 コードレス 床置き 卓上 小型 コンパクト 大容量 8時間 タイマー付き 水を入れるだけ 洗える 掃除 静音 机 デスク 部屋 リビング 寝室 子供部屋 一人暮らし インテリア ライト 光 USB 充電式 電気不要 携帯 持ち運び 旅行 おしゃれ かわいい</h3>
+      <p class="summary">レビュー評価4.6、14件のレビューを参考に選んだ、掃除向けの注目アイテムです。</p>
+      <div class="rating">★ 4.64 / 14件</div>
+      <div class="price">¥2,980<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00t4meo.abj4c996.g00t4meo.abj4d1e5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fmilink-inc%2Fr02qt0035%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fmilink-inc%2Fi%2F10000330%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article></div></section><section class="section" id="%E3%83%87%E3%82%B9%E3%82%AF"><div class="section-head"><div><span class="eyebrow">CURATED PICKS</span><h2>デスクのおすすめ</h2></div><p>レビュー数や評価などの公開データをもとに自動選定しています。</p></div><div class="grid"><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00tkdfo.abj4c9c6.g00tkdfo.abj4dcfe/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbenq-directshop%2Fmoniterlight_01%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fbenq-directshop%2Fi%2F10000009%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/benq-directshop/cabinet/07271353/screenbar-1.jpg?_ex=128x128" alt="【BenQ公式店】BenQ ScreenBar スクリーンバー モニターライト モニター掛け式ライト　デスクライト USBライト ディスプレイライト 自動調光 テレワーク 在宅勤務 便利グッズ デスク周り LED PCアクセサリー 高演色 ブルーライト軽減" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">デスク</span>
+      <h3>【BenQ公式店】BenQ ScreenBar スクリーンバー モニターライト モニター掛け式ライト　デスクライト USBライト ディスプレイライト 自動調光 テレワーク 在宅勤務 便利グッズ デスク周り LED PCアクセサリー 高演色 ブルーライト軽減</h3>
+      <p class="summary">レビュー評価4.6、195件のレビューを参考に選んだ、デスク向けの注目アイテムです。</p>
+      <div class="rating">★ 4.63 / 195件</div>
+      <div class="price">¥17,550<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00tkdfo.abj4c9c6.g00tkdfo.abj4dcfe/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbenq-directshop%2Fmoniterlight_01%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fbenq-directshop%2Fi%2F10000009%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00twnuo.abj4c8b3.g00twnuo.abj4d684/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flifestyle-007%2F70923%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Flifestyle-007%2Fi%2F10001374%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/lifestyle-007/cabinet/new_thumbnail/70923_3.jpg?_ex=128x128" alt="ドクターショール フライトソックス 機内 着圧ソックス 飛行機 便利 グッズ 在宅 テレワーク 機内用 男女兼用 全2サイズ Mサイズ Lサイズ むくみ解消 ソックス 靴下 浮腫 飛行機 足 むくみ 取り オフィス デスクワーク 飛行機 着圧ソックス" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">デスク</span>
+      <h3>ドクターショール フライトソックス 機内 着圧ソックス 飛行機 便利 グッズ 在宅 テレワーク 機内用 男女兼用 全2サイズ Mサイズ Lサイズ むくみ解消 ソックス 靴下 浮腫 飛行機 足 むくみ 取り オフィス デスクワーク 飛行機 着圧ソックス</h3>
+      <p class="summary">レビュー評価4.6、199件のレビューを参考に選んだ、デスク向けの注目アイテムです。</p>
+      <div class="rating">★ 4.63 / 199件</div>
+      <div class="price">¥1,670<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00twnuo.abj4c8b3.g00twnuo.abj4d684/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flifestyle-007%2F70923%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Flifestyle-007%2Fi%2F10001374%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00pv0vo.abj4c151.g00pv0vo.abj4d28e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhonest%2F1421154%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fhonest%2Fi%2F10001657%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/honest/cabinet/smile-kids/ako-51.jpg?_ex=128x128" alt="こたつの高さをあげる足 ジャンボ 【新 AKO-51】 【テーブル 脚 高さ 調整 】4cmアップ 新生活 机 高さ調整 テーブルを高くする テーブルの足を高くする 新生活 こたつの足 高くする 在宅勤務 リモートワーク 便利" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">デスク</span>
+      <h3>こたつの高さをあげる足 ジャンボ 【新 AKO-51】 【テーブル 脚 高さ 調整 】4cmアップ 新生活 机 高さ調整 テーブルを高くする テーブルの足を高くする 新生活 こたつの足 高くする 在宅勤務 リモートワーク 便利</h3>
+      <p class="summary">レビュー評価4.5、58件のレビューを参考に選んだ、デスク向けの注目アイテムです。</p>
+      <div class="rating">★ 4.47 / 58件</div>
+      <div class="price">¥1,210<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00pv0vo.abj4c151.g00pv0vo.abj4d28e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhonest%2F1421154%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fhonest%2Fi%2F10001657%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00qkvpo.abj4ce87.g00qkvpo.abj4d4a2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2F3rwebshop%2F3r-kcwnk01%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2F3rwebshop%2Fi%2F10008796%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/3rwebshop/cabinet/hansoku/06957443/imgrc0125339227.jpg?_ex=128x128" alt="【1年保証★楽天1位受賞！】 テンキー ワイヤレス 電卓 キーボード コンパクト テンキー USB 無線 小型 テンキーボード USBテンキー ワイヤレステンキー おしゃれ 10桁 薄型 デスク ノート パソコン PC 在宅勤務 在宅ワーク 便利グッズ 10キー Windows11 1年保証" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">デスク</span>
+      <h3>【1年保証★楽天1位受賞！】 テンキー ワイヤレス 電卓 キーボード コンパクト テンキー USB 無線 小型 テンキーボード USBテンキー ワイヤレステンキー おしゃれ 10桁 薄型 デスク ノート パソコン PC 在宅勤務 在宅ワーク 便利グッズ 10キー Windows11 1年保証</h3>
+      <p class="summary">レビュー評価4.2、127件のレビューを参考に選んだ、デスク向けの注目アイテムです。</p>
+      <div class="rating">★ 4.24 / 127件</div>
+      <div class="price">¥3,820<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00qkvpo.abj4ce87.g00qkvpo.abj4d4a2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2F3rwebshop%2F3r-kcwnk01%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2F3rwebshop%2Fi%2F10008796%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article></div></section><section class="section" id="%E9%98%B2%E7%81%BD"><div class="section-head"><div><span class="eyebrow">CURATED PICKS</span><h2>防災のおすすめ</h2></div><p>レビュー数や評価などの公開データをもとに自動選定しています。</p></div><div class="grid"><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00qr6ho.abj4cd96.g00qr6ho.abj4d5d9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flock110%2F537537%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Flock110%2Fi%2F10118283%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/lock110/cabinet/bousaicp/537537_rank.jpg?_ex=128x128" alt="防災リュック 1人用 アイリスオーヤマ 防災グッズ 33点 防災セット 災害グッズ 大容量 防災 災害 トイレ 給水 ウォータータンク 非常用 避難グッズ 防災用品 BRS-33 * ポータブル電源【防災CP】" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">防災</span>
+      <h3>防災リュック 1人用 アイリスオーヤマ 防災グッズ 33点 防災セット 災害グッズ 大容量 防災 災害 トイレ 給水 ウォータータンク 非常用 避難グッズ 防災用品 BRS-33 * ポータブル電源【防災CP】</h3>
+      <p class="summary">レビュー評価4.6、448件のレビューを参考に選んだ、防災向けの注目アイテムです。</p>
+      <div class="rating">★ 4.58 / 448件</div>
+      <div class="price">¥5,980<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00qr6ho.abj4cd96.g00qr6ho.abj4d5d9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flock110%2F537537%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Flock110%2Fi%2F10118283%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00s4gao.abj4cea6.g00s4gao.abj4d792/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fcheeky%2Fu521764%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fcheeky%2Fi%2F10410552%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/cheeky/cabinet/21751-22000/u521764.jpg?_ex=128x128" alt="伊藤食品 あいこちゃん 青の鯖水煮 150g×24缶セット 国産 食塩不使用 料理 長期保存食 非常食 保存食 備蓄 サバ缶 鯖缶" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">防災</span>
+      <h3>伊藤食品 あいこちゃん 青の鯖水煮 150g×24缶セット 国産 食塩不使用 料理 長期保存食 非常食 保存食 備蓄 サバ缶 鯖缶</h3>
+      <p class="summary">レビュー評価4.9、146件のレビューを参考に選んだ、防災向けの注目アイテムです。</p>
+      <div class="rating">★ 4.87 / 146件</div>
+      <div class="price">¥5,950<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00s4gao.abj4cea6.g00s4gao.abj4d792/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fcheeky%2Fu521764%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fcheeky%2Fi%2F10410552%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00pr3yo.abj4cdc4.g00pr3yo.abj4d4c2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frack-kan%2F9541868%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Frack-kan%2Fi%2F10029989%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/rack-kan/cabinet/10835129/12146817/enet_7288104s.jpg?_ex=128x128" alt="＼早割5％OFFクーポン★17日10時迄／毛布 もこもこ シングル セミダブル ダブル ブランケット 大判 ひざ掛け 冬用 薄手 洗える 洗濯機可 掛け布団 かわいい 静電気防止 軽い 軽量 マイクロミンクファー スタンダード プレミアム あったか マイクロファイバー 膝掛 防災" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">防災</span>
+      <h3>＼早割5％OFFクーポン★17日10時迄／毛布 もこもこ シングル セミダブル ダブル ブランケット 大判 ひざ掛け 冬用 薄手 洗える 洗濯機可 掛け布団 かわいい 静電気防止 軽い 軽量 マイクロミンクファー スタンダード プレミアム あったか マイクロファイバー 膝掛 防災</h3>
+      <p class="summary">レビュー評価4.4、427件のレビューを参考に選んだ、防災向けの注目アイテムです。</p>
+      <div class="rating">★ 4.43 / 427件</div>
+      <div class="price">¥2,280<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00pr3yo.abj4cdc4.g00pr3yo.abj4d4c2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frack-kan%2F9541868%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Frack-kan%2Fi%2F10029989%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article><article class="card">
+    <a class="image" href="https://hb.afl.rakuten.co.jp/hgc/g00tdhyo.abj4c0e2.g00tdhyo.abj4dd7f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsunshine-store%2F24154%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fsunshine-store%2Fi%2F10000555%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/sunshine-store/cabinet/11883469/imgrc0182934402.jpg?_ex=128x128" alt="【エントリーポイント5倍】電気ケトル ポータブル 海外対応 電圧100-240V 携帯 湯沸かしケトル 小型 6段階温度調節 1-24H予約機能 保温 400ml トラベルケトル ステンレス 二重構造 旅行 一人用 ギフト 防災グッズ アウトドア コンパクト 電気ポット コーヒー 持ち運び" loading="lazy"></a>
+    <div class="card-body">
+      <span class="tag">防災</span>
+      <h3>【エントリーポイント5倍】電気ケトル ポータブル 海外対応 電圧100-240V 携帯 湯沸かしケトル 小型 6段階温度調節 1-24H予約機能 保温 400ml トラベルケトル ステンレス 二重構造 旅行 一人用 ギフト 防災グッズ アウトドア コンパクト 電気ポット コーヒー 持ち運び</h3>
+      <p class="summary">レビュー評価4.5、415件のレビューを参考に選んだ、防災向けの注目アイテムです。</p>
+      <div class="rating">★ 4.50 / 415件</div>
+      <div class="price">¥4,080<span>（税込表示は楽天市場側をご確認ください）</span></div>
+      <a class="cta" href="https://hb.afl.rakuten.co.jp/hgc/g00tdhyo.abj4c0e2.g00tdhyo.abj4dd7f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsunshine-store%2F24154%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fsunshine-store%2Fi%2F10000555%2F&amp;rafcid=wsc_i_is_7efe808b-82d5-4b76-844d-907ef127d98c" target="_blank" rel="nofollow sponsored noopener">楽天市場で詳細を見る</a>
+    </div>
+  </article></div></section><section class="about"><div class="about-box"><h2>このサイトの選び方</h2><p>楽天市場APIから取得した商品情報をもとに、レビュー評価・レビュー件数・商品カテゴリ等を機械的にスコアリングし、重複商品を除外して掲載候補を選定しています。紹介文は商品名やレビュー指標などの取得データをもとにAIで生成します。商品の使用感を実体験したものではありません。</p></div></section></div>
 </main>
-<script>
-const run=document.getElementById('run'),statusEl=document.getElementById('status'),products=document.getElementById('products');
-function status(t,ok=false){statusEl.textContent=t;statusEl.className='status '+(ok?'ok':'ng')}
-function render(items){products.innerHTML='';items.slice(0,8).forEach(item=>{const image=item.mediumImageUrls?.[0]?.imageUrl||item.mediumImageUrls?.[0]||'';const url=item.affiliateUrl||item.itemUrl||'#';const card=document.createElement('article');card.className='card';card.innerHTML=`${image?`<img src="${image}" alt="">`:''}<div class="body"><div class="name"></div><div class="price">¥${Number(item.itemPrice||0).toLocaleString('ja-JP')}</div><div class="meta">${item.reviewAverage?`★ ${item.reviewAverage} / ${item.reviewCount||0}件`:'レビュー情報なし'}</div><a class="buy" href="${url}" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a></div>`;card.querySelector('.name').textContent=item.itemName||'商品名なし';products.appendChild(card)})}
-run.addEventListener('click',async()=>{const applicationId=document.getElementById('appId').value.trim(),accessKey=document.getElementById('accessKey').value.trim(),affiliateId=document.getElementById('affiliateId').value.trim(),keyword=document.getElementById('keyword').value.trim();if(!applicationId||!accessKey||!keyword){status('Application ID、Access Key、検索キーワードを入力してください。');return}run.disabled=true;products.innerHTML='';statusEl.className='status';statusEl.textContent='接続中…';const p=new URLSearchParams({applicationId,accessKey,keyword,format:'json',formatVersion:'2',hits:'8',sort:'-reviewCount',imageFlag:'1'});if(affiliateId)p.set('affiliateId',affiliateId);const url='https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701?'+p.toString();try{const r=await fetch(url,{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',referrer:location.href,referrerPolicy:'strict-origin-when-cross-origin'});const text=await r.text();let data;try{data=JSON.parse(text)}catch{data=null}if(!r.ok){status(`HTTP ${r.status}\n${data?.error||''}\n${data?.error_description||text.slice(0,500)}`);return}const items=data?.Items||data?.items||[];const normalized=items.map(x=>x.Item||x.item||x).filter(Boolean);if(!normalized.length){status('HTTP 200 ですが商品が0件でした。\n'+text.slice(0,500));return}render(normalized);status(`接続成功：${normalized.length}件取得しました。`,true)}catch(e){status('ブラウザ通信エラー\n'+e.message+'\n\nAllowed websites が yoshiki0304.github.io になっているか確認してください。')}finally{run.disabled=false}});
-</script>
-</body>
-</html>
+<footer class="footer"><div class="wrap">当サイトは楽天アフィリエイトプログラムを利用しており、リンク経由の購入により報酬を受け取る場合があります。<br>Supported by <a href="https://webservice.rakuten.co.jp/" target="_blank" rel="noopener">Rakuten Web Service</a></div></footer>
+</body></html>
