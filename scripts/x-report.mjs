@@ -37,7 +37,7 @@ function oauthHeader(method, baseUrl, query = {}) {
 
   return 'OAuth ' + Object.entries(oauth)
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([k, v]) => `${enc(k)}="${enc(v)}"`)
+    .map(([k, v]) => `${enc(k)}=\"${enc(v)}\"`)
     .join(', ');
 }
 
@@ -52,6 +52,15 @@ async function readJson(url, fallback) {
 function todayJst() {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit'
+  }).format(new Date());
+}
+
+function nowJst() {
+  return new Intl.DateTimeFormat('ja-JP', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
   }).format(new Date());
 }
 
@@ -142,10 +151,10 @@ async function aiAnalysis(entry, baseline, recent) {
 
 async function writeNoTargetReport(reportDate) {
   await fs.mkdir(REPORT_DIR, {recursive: true});
-  const report = `# X日次レポート｜${reportDate}\n\n本日は未分析の新規投稿がありません。\n\n次回の新規投稿後、その投稿の表示回数・クリック・エンゲージメントを自動集計します。\n`;
+  const report = `# X集計｜${reportDate}\n\n集計対象のX投稿がまだありません。\n`;
   await fs.writeFile(new URL(`${reportDate}.md`, REPORT_DIR), report);
   await fs.writeFile(new URL('latest.md', REPORT_DIR), report);
-  console.log('No unanalyzed X post found. Status report written.');
+  console.log('No X post found. Status report written.');
 }
 
 async function main() {
@@ -153,9 +162,9 @@ async function main() {
   const analytics = await readJson(ANALYTICS_PATH, {entries: []});
   const products = await readJson(PRODUCTS_PATH, {products: []});
   const reportDate = todayJst();
+  const collectedAt = nowJst();
 
-  const analyzed = new Set((analytics.entries || []).map(x => String(x.postId || '')));
-  const target = [...(state.posts || [])].reverse().find(p => p.postId && !analyzed.has(String(p.postId)));
+  const target = [...(state.posts || [])].reverse().find(p => p.postId);
 
   if (!target) {
     await writeNoTargetReport(reportDate);
@@ -174,7 +183,9 @@ async function main() {
   const profileClicks = n(priv.user_profile_clicks || org.user_profile_clicks);
 
   const product = (products.products || []).find(p => p.itemCode === target.itemCode) || {};
-  const previous = (analytics.entries || []).slice(-7);
+  const previous = (analytics.entries || [])
+    .filter(x => String(x.postId || '') !== String(target.postId))
+    .slice(-7);
   const baseline = {
     count: previous.length,
     impressions: avg(previous.map(x => x.metrics?.impressions)),
@@ -185,6 +196,7 @@ async function main() {
 
   const entry = {
     reportDate,
+    collectedAt,
     postDate: target.date || null,
     postId: String(target.postId),
     itemCode: target.itemCode || null,
@@ -221,15 +233,18 @@ async function main() {
   }));
 
   const analysisText = await aiAnalysis(entry, baseline, recentForAi);
-  const allEntries = [...(analytics.entries || []), entry].slice(-90);
+  const allEntries = [
+    ...(analytics.entries || []).filter(x => String(x.postId || '') !== String(entry.postId)),
+    entry
+  ].slice(-90);
   await fs.writeFile(ANALYTICS_PATH, JSON.stringify({entries: allEntries}, null, 2) + '\n');
 
   await fs.mkdir(REPORT_DIR, {recursive: true});
-  const report = `# X日次レポート｜${reportDate}\n\n## 対象投稿\n- 投稿日: ${entry.postDate || '-'}\n- カテゴリ: ${entry.category || '-'}\n- 商品: ${entry.title || '-'}\n- 価格: ${entry.price ? `${fmt(entry.price)}円` : '-'}\n- Post ID: ${entry.postId}\n\n## KPI\n| 指標 | 今回 | 直近平均との比較 |\n|---|---:|---:|\n| インプレッション | ${fmt(entry.metrics.impressions)} | ${deltaText(entry.metrics.impressions, baseline.impressions)} |\n| URLクリック | ${fmt(entry.metrics.urlClicks)} | ${deltaText(entry.metrics.urlClicks, baseline.urlClicks)} |\n| CTR | ${fmt(entry.rates.ctr, 2)}% | ${baseline.count ? `${deltaText(entry.rates.ctr, baseline.ctr)}` : '比較データなし'} |\n| エンゲージメント率 | ${fmt(entry.rates.engagementRate, 2)}% | ${baseline.count ? `${deltaText(entry.rates.engagementRate, baseline.engagementRate)}` : '比較データなし'} |\n| いいね | ${fmt(entry.metrics.likes)} | - |\n| リポスト | ${fmt(entry.metrics.reposts)} | - |\n| 返信 | ${fmt(entry.metrics.replies)} | - |\n| ブックマーク | ${fmt(entry.metrics.bookmarks)} | - |\n| プロフィールクリック | ${fmt(entry.metrics.profileClicks)} | - |\n\n## 7日基準\n- 比較件数: ${baseline.count}件\n- 平均インプレッション: ${fmt(baseline.impressions)}\n- 平均URLクリック: ${fmt(baseline.urlClicks, 1)}\n- 平均CTR: ${fmt(baseline.ctr, 2)}%\n- 平均エンゲージメント率: ${fmt(baseline.engagementRate, 2)}%\n\n${analysisText}\n\n## 運用メモ\n- まず7投稿分を蓄積し、その後はカテゴリ・価格帯・CTR・表示回数の相関を重視します。\n- 売上や成果報酬は楽天側の実績データを連携するまで、このレポートでは評価しません。\n`;
+  const report = `# X集計｜${reportDate}\n\n- 集計時刻: ${entry.collectedAt}\n\n## 対象投稿\n- 投稿日: ${entry.postDate || '-'}\n- カテゴリ: ${entry.category || '-'}\n- 商品: ${entry.title || '-'}\n- 価格: ${entry.price ? `${fmt(entry.price)}円` : '-'}\n- Post ID: ${entry.postId}\n\n## KPI\n| 指標 | 今回 | 直近平均との比較 |\n|---|---:|---:|\n| 閲覧回数（インプレッション） | ${fmt(entry.metrics.impressions)} | ${deltaText(entry.metrics.impressions, baseline.impressions)} |\n| 反応回数（エンゲージメント） | ${fmt(entry.metrics.engagements)} | - |\n| いいね | ${fmt(entry.metrics.likes)} | - |\n| URLクリック | ${fmt(entry.metrics.urlClicks)} | ${deltaText(entry.metrics.urlClicks, baseline.urlClicks)} |\n| CTR | ${fmt(entry.rates.ctr, 2)}% | ${baseline.count ? `${deltaText(entry.rates.ctr, baseline.ctr)}` : '比較データなし'} |\n| エンゲージメント率 | ${fmt(entry.rates.engagementRate, 2)}% | ${baseline.count ? `${deltaText(entry.rates.engagementRate, baseline.engagementRate)}` : '比較データなし'} |\n| リポスト | ${fmt(entry.metrics.reposts)} | - |\n| 返信 | ${fmt(entry.metrics.replies)} | - |\n| ブックマーク | ${fmt(entry.metrics.bookmarks)} | - |\n| プロフィールクリック | ${fmt(entry.metrics.profileClicks)} | - |\n\n## 7投稿基準\n- 比較件数: ${baseline.count}件\n- 平均インプレッション: ${fmt(baseline.impressions)}\n- 平均URLクリック: ${fmt(baseline.urlClicks, 1)}\n- 平均CTR: ${fmt(baseline.ctr, 2)}%\n- 平均エンゲージメント率: ${fmt(baseline.engagementRate, 2)}%\n\n${analysisText}\n\n## 運用メモ\n- 同じ投稿を1日複数回再集計し、最新値に更新します。\n- 売上や成果報酬は楽天側の実績データを連携するまで、このレポートでは評価しません。\n`;
 
   await fs.writeFile(new URL(`${reportDate}.md`, REPORT_DIR), report);
   await fs.writeFile(new URL('latest.md', REPORT_DIR), report);
-  console.log(`X daily report created for post ${entry.postId}`);
+  console.log(`X analytics refreshed for post ${entry.postId} at ${entry.collectedAt}`);
 }
 
 main().catch(err => {
