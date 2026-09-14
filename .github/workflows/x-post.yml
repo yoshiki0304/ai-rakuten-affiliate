@@ -1,0 +1,47 @@
+name: X affiliate post
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_post:
+        description: 'Allow another post on the same JST date'
+        required: false
+        default: '0'
+
+permissions:
+  contents: write
+
+jobs:
+  post-x:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Post selected affiliate item to X
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.6-flash
+          FORCE_POST: ${{ inputs.force_post }}
+        run: node scripts/post-x.mjs
+
+      - name: Save X posting state
+        run: |
+          git config user.name "affiliate-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/x-state.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No X state changes to commit."
+          else
+            git commit -m "Record X affiliate post"
+            git push
+          fi
