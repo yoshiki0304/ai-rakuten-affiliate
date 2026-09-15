@@ -1,7 +1,8 @@
 {
-  "lastPostDate": "2026-09-15",
+  "lastPostDate": "2026-09-16",
   "postedItemCodes": [
-    "r1-shop:10000062"
+    "r1-shop:10000062",
+    "bathroom:10002807"
   ],
   "posts": [
     {
@@ -10,6 +11,16 @@
       "itemCode": "r1-shop:10000062",
       "category": "防災",
       "title": "防災士監修 非常用簡易トイレセット 60回分 防臭袋付き 携帯トイレ"
+    },
+    {
+      "date": "2026-09-16",
+      "postId": "2099885874066456616",
+      "itemCode": "bathroom:10002807",
+      "category": "掃除",
+      "title": "tower 《 山崎実業 マグネットスプレーボトルハンガー タワー 》 スプレーボ…",
+      "learningMode": "explore",
+      "learningCount": 1,
+      "breakoutReferencePostId": "2099526534642217107"
     }
   ]
 }
