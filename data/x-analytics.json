@@ -53,6 +53,33 @@
         "ctr": 0,
         "engagementRate": 0
       }
+    },
+    {
+      "reportDate": "2026-09-17",
+      "collectedAt": "2026/09/17 00:31:12",
+      "postDate": "2026-09-17",
+      "postId": "2100246033817067650",
+      "itemCode": "trade-abc:10012425",
+      "category": "防災",
+      "title": "USB充電式 小型COB LEDミニライト 投光器 マグネット付",
+      "price": 1180,
+      "text": "PR｜マグネットで壁や車につくUSB充電式の小型LEDライト。 夜の作業や非常時の備えとして、ひとつ置いておくと何かと重宝しそうです。レビュー4,300件超えで1,180円と手頃なのも試しやすいポイント。 楽天市場で詳細を見る↓\nhttps://t.co/07RnnbVRdA",
+      "createdAt": "2026-09-16T15:30:49.000Z",
+      "metrics": {
+        "impressions": 0,
+        "likes": 0,
+        "reposts": 0,
+        "replies": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "urlClicks": 0,
+        "profileClicks": 0,
+        "engagements": 0
+      },
+      "rates": {
+        "ctr": 0,
+        "engagementRate": 0
+      }
     }
   ]
 }
