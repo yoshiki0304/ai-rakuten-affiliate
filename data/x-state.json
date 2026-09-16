@@ -1,8 +1,9 @@
 {
-  "lastPostDate": "2026-09-16",
+  "lastPostDate": "2026-09-17",
   "postedItemCodes": [
     "r1-shop:10000062",
-    "bathroom:10002807"
+    "bathroom:10002807",
+    "trade-abc:10012425"
   ],
   "posts": [
     {
@@ -20,6 +21,16 @@
       "title": "tower 《 山崎実業 マグネットスプレーボトルハンガー タワー 》 スプレーボ…",
       "learningMode": "explore",
       "learningCount": 1,
+      "breakoutReferencePostId": "2099526534642217107"
+    },
+    {
+      "date": "2026-09-17",
+      "postId": "2100246033817067650",
+      "itemCode": "trade-abc:10012425",
+      "category": "防災",
+      "title": "USB充電式 小型COB LEDミニライト 投光器 マグネット付",
+      "learningMode": "explore",
+      "learningCount": 2,
       "breakoutReferencePostId": "2099526534642217107"
     }
   ]
