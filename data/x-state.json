@@ -1,9 +1,10 @@
 {
-  "lastPostDate": "2026-09-17",
+  "lastPostDate": "2026-09-18",
   "postedItemCodes": [
     "r1-shop:10000062",
     "bathroom:10002807",
-    "trade-abc:10012425"
+    "trade-abc:10012425",
+    "futurebox:10000385"
   ],
   "posts": [
     {
@@ -31,6 +32,16 @@
       "title": "USB充電式 小型COB LEDミニライト 投光器 マグネット付",
       "learningMode": "explore",
       "learningCount": 2,
+      "breakoutReferencePostId": "2099526534642217107"
+    },
+    {
+      "date": "2026-09-18",
+      "postId": "2100610114923241591",
+      "itemCode": "futurebox:10000385",
+      "category": "収納",
+      "title": "旅行用 トラベルポーチセット 取り外し可能 コスメ・洗面ポーチ",
+      "learningMode": "exploit",
+      "learningCount": 3,
       "breakoutReferencePostId": "2099526534642217107"
     }
   ]
