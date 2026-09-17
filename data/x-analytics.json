@@ -80,6 +80,33 @@
         "ctr": 0,
         "engagementRate": 0
       }
+    },
+    {
+      "reportDate": "2026-09-18",
+      "collectedAt": "2026/09/18 00:38:05",
+      "postDate": "2026-09-18",
+      "postId": "2100610114923241591",
+      "itemCode": "futurebox:10000385",
+      "category": "収納",
+      "title": "旅行用 トラベルポーチセット 取り外し可能 コスメ・洗面ポーチ",
+      "price": 1760,
+      "text": "PR｜旅行や出張のコスメや洗面用具をまとめられるトラベルポーチ。 取り外してそのまま持っていける作りなので、パッキングがぐっと楽になりそうです。 レビュー4,900件超えで1,760円という手頃さも魅力。 楽天市場で詳細を見る↓\nhttps://t.co/krQqvvTpbo",
+      "createdAt": "2026-09-17T15:37:33.000Z",
+      "metrics": {
+        "impressions": 0,
+        "likes": 0,
+        "reposts": 0,
+        "replies": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "urlClicks": 0,
+        "profileClicks": 0,
+        "engagements": 0
+      },
+      "rates": {
+        "ctr": 0,
+        "engagementRate": 0
+      }
     }
   ]
 }
