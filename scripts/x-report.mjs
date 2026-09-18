@@ -125,27 +125,51 @@ function fallbackAnalysis(entry, baseline) {
 
 async function aiAnalysis(entry, baseline, recent) {
   const key = process.env.GEMINI_API_KEY;
-  if (!key) return fallbackAnalysis(entry, baseline);
+  if (!key) {
+    console.warn('[Gemini] 代替処理発動: API key is not configured.');
+    return fallbackAnalysis(entry, baseline);
+  }
   const model = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
   const prompt = `Xで運用している楽天アフィリエイト投稿の日次分析をしてください。\n数字にない事実は作らず、因果関係は断定せず仮説として書いてください。\n売上・購入数はデータがないので推測しないでください。\n日本語で、以下の4見出しだけを使って簡潔に出力してください。\n\n### 総合評価\nA〜Dの1段階評価と理由を2文以内。\n### 良かった点\n箇条書き最大3つ。\n### 改善点\n箇条書き最大3つ。\n### 次回方針\n明日以降の商品選定・文章改善を具体的に最大4つ。\n\n今回のデータ:\n${JSON.stringify(entry)}\n\n直近比較平均:\n${JSON.stringify(baseline)}\n\n直近履歴:\n${JSON.stringify(recent)}`;
 
-  try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`, {
-      method: 'POST',
-      headers: {'content-type': 'application/json'},
-      body: JSON.stringify({
-        contents: [{parts: [{text: prompt}]}],
-        generationConfig: {temperature: 0.25}
-      })
-    });
-    if (!res.ok) throw new Error(`Gemini ${res.status}`);
-    const json = await res.json();
-    const text = json?.candidates?.[0]?.content?.parts?.map(x => x.text || '').join('').trim();
-    if (!text) throw new Error('Empty Gemini response');
-    return text;
-  } catch (err) {
-    console.warn(`Gemini report generation failed: ${err.message}`);
-    return fallbackAnalysis(entry, baseline);
+  const maxAttempts = 3;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    let retryable = true;
+    // Keep diagnostics free of request URLs, credentials, and response bodies.
+    let reason = 'network, timeout, or invalid response';
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`, {
+        method: 'POST',
+        headers: {'content-type': 'application/json'},
+        signal: AbortSignal.timeout(60_000),
+        body: JSON.stringify({
+          contents: [{parts: [{text: prompt}]}],
+          generationConfig: {temperature: 0.25}
+        })
+      });
+      if (!res.ok) {
+        reason = `HTTP ${res.status}`;
+        retryable = [408, 429, 500, 502, 503, 504].includes(res.status);
+        throw new Error('Gemini HTTP error');
+      }
+      const json = await res.json();
+      const text = json?.candidates?.[0]?.content?.parts?.map(x => x.text || '').join('').trim();
+      if (!text) {
+        reason = 'empty response';
+        throw new Error('Empty Gemini response');
+      }
+      console.log(`[Gemini] Gemini成功: attempt ${attempt}/${maxAttempts}`);
+      return text;
+    } catch {
+      console.warn(`[Gemini] Attempt ${attempt}/${maxAttempts} failed: ${reason}`);
+      if (!retryable || attempt === maxAttempts) {
+        console.warn(`[Gemini] 代替処理発動: ${reason}; continuing report generation.`);
+        return fallbackAnalysis(entry, baseline);
+      }
+      const delayMs = attempt * 3000;
+      console.log(`[Gemini] Retrying in ${delayMs / 1000}s.`);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
   }
 }
 
