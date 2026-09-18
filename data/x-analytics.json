@@ -107,6 +107,33 @@
         "ctr": 0,
         "engagementRate": 0
       }
+    },
+    {
+      "reportDate": "2026-09-19",
+      "collectedAt": "2026/09/19 01:50:33",
+      "postDate": "2026-09-19",
+      "postId": "2100965016182628445",
+      "itemCode": "starfilter:10000112",
+      "category": "暮らし",
+      "title": "スターフィルター 換気扇 レンジフードフィルター スターターセット",
+      "price": 3080,
+      "text": "PR｜キッチンの油汚れ対策に役立つスターフィルターのスターターセット。 換気扇の掃除をラクにしたい時にぴったりで、レビューも4,300件を超えています。 3,080円で手軽に試せるのも助かりますね。 楽天市場で詳細を見る↓\nhttps://t.co/ZKo0PhCHIb",
+      "createdAt": "2026-09-18T15:07:48.000Z",
+      "metrics": {
+        "impressions": 0,
+        "likes": 0,
+        "reposts": 0,
+        "replies": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "urlClicks": 0,
+        "profileClicks": 0,
+        "engagements": 0
+      },
+      "rates": {
+        "ctr": 0,
+        "engagementRate": 0
+      }
     }
   ]
 }
