@@ -1,10 +1,11 @@
 {
-  "lastPostDate": "2026-09-18",
+  "lastPostDate": "2026-09-19",
   "postedItemCodes": [
     "r1-shop:10000062",
     "bathroom:10002807",
     "trade-abc:10012425",
-    "futurebox:10000385"
+    "futurebox:10000385",
+    "starfilter:10000112"
   ],
   "posts": [
     {
@@ -42,6 +43,16 @@
       "title": "旅行用 トラベルポーチセット 取り外し可能 コスメ・洗面ポーチ",
       "learningMode": "exploit",
       "learningCount": 3,
+      "breakoutReferencePostId": "2099526534642217107"
+    },
+    {
+      "date": "2026-09-19",
+      "postId": "2100965016182628445",
+      "itemCode": "starfilter:10000112",
+      "category": "暮らし",
+      "title": "スターフィルター 換気扇 レンジフードフィルター スターターセット",
+      "learningMode": "explore",
+      "learningCount": 4,
       "breakoutReferencePostId": "2099526534642217107"
     }
   ]
