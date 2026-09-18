@@ -12,6 +12,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: x-daily-analytics-report-main
+  cancel-in-progress: false
+
 jobs:
   report-x:
     runs-on: ubuntu-latest
@@ -19,6 +23,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -44,5 +51,21 @@ jobs:
             echo "No analytics changes to commit."
           else
             git commit -m "Refresh X analytics report"
-            git push
+            for attempt in 1 2 3 4 5; do
+              git fetch origin main
+              if ! git rebase origin/main; then
+                git rebase --abort
+                echo "::error::Could not rebase analytics changes onto main; refusing to overwrite remote changes."
+                exit 1
+              fi
+              if git push origin HEAD:main; then
+                exit 0
+              fi
+              if [ "$attempt" -lt 5 ]; then
+                echo "Push failed (attempt $attempt/5); fetching latest main before retry."
+                sleep $((attempt * 2))
+              fi
+            done
+            echo "::error::Could not push analytics changes after 5 attempts."
+            exit 1
           fi
