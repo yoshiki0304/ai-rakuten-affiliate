@@ -59,6 +59,7 @@ jobs:
                 exit 1
               fi
               if git push origin HEAD:main; then
+                echo "[GitHub] GitHub保存成功: analytics and report pushed to main."
                 exit 0
               fi
               if [ "$attempt" -lt 5 ]; then
