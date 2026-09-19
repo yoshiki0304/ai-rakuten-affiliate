@@ -2,8 +2,10 @@ name: Daily affiliate update
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '15 18 * * *'
+  # Scheduled operation paused to preserve X API credits.
+  # To resume, uncomment the schedule and cron lines below.
+  # schedule:
+  #   - cron: '15 18 * * *'
 
 permissions:
   contents: write

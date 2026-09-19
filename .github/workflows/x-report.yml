@@ -2,9 +2,11 @@ name: X daily analytics report
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '30 3 * * *'
-    - cron: '35 11 * * *'
+  # Scheduled operation paused to preserve X API credits.
+  # To resume, uncomment the schedule and cron lines below.
+  # schedule:
+  #   - cron: '30 3 * * *'
+  #   - cron: '35 11 * * *'
 
 permissions:
   contents: write
