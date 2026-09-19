@@ -3,10 +3,7 @@ name: X daily analytics report
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 23 * * *'
     - cron: '30 3 * * *'
-    - cron: '30 5 * * *'
-    - cron: '30 8 * * *'
     - cron: '35 11 * * *'
 
 permissions:
